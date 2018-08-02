@@ -1,0 +1,7 @@
+# intellij project file.
+.idea/
+target/
+*.iml
+.DS_Store
+tomcat/
+logFile.log
