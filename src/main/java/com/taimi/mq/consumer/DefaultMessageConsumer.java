@@ -5,11 +5,15 @@ import com.taimi.mq.comm.http.HttpMessageSendStrategy;
 import com.taimi.mq.message.DefaultMessageQueue;
 import com.taimi.mq.message.MessageQueue;
 import com.taimi.mq.persistence.PersistStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by superttmm on 25/07/2018.
  */
 public class DefaultMessageConsumer implements MessageConsumer {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private MessageQueue messageQueue;
     private String consumerName;
@@ -46,9 +50,13 @@ public class DefaultMessageConsumer implements MessageConsumer {
 
     @Override
     public void consume(){
-        messageQueue.dequeue(consumerName, message ->
-                messageSendStrategy.sendMessage(message, messageId ->
-                        messageQueue.markMessageConsumed(consumerName, messageId)));
+        messageQueue.dequeue(consumerName, message -> {
+            logger.info("Consuming message: " + message.getId());
+            messageSendStrategy.sendMessage(message, messageId ->{
+                    logger.info("Sending message: " + messageId);
+                    messageQueue.markMessageConsumed(consumerName, messageId);
+            });
+        });
     }
 
     @Override

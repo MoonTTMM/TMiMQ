@@ -1,11 +1,15 @@
 package com.taimi.mq.message;
 
 import com.taimi.mq.persistence.PersistStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by superttmm on 25/07/2018.
  */
 public class DefaultMessageQueue implements MessageQueue {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private String queueName;
 
@@ -39,6 +43,7 @@ public class DefaultMessageQueue implements MessageQueue {
     public void dequeue(String consumer, MessageCallback callback) {
         Message message = persistStrategy.dequeueMessage(queueName, consumer);
         if(message == null){
+            logger.info("Got no message in " + queueName);
             return;
         }
         callback.handle(message);

@@ -1,5 +1,6 @@
 <configuration>
 
+    <property name="LOG_MQ_FILE" value="${LOG_MQ_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}TMiMQ.log}"/>
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
@@ -7,10 +8,10 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>logFile.log</file>
+    <appender name="MQ_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_MQ_FILE}</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <fileNamePattern>TMiMQ.log.%i</fileNamePattern>
+            <fileNamePattern>${LOG_MQ_FILE}.%i</fileNamePattern>
         </rollingPolicy>
         <triggeringPolicy
                 class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
@@ -23,8 +24,11 @@
         </encoder>
     </appender>
 
+    <logger name="com.taimi.mq" level="INFO" additivity="false">
+        <appender-ref ref="MQ_FILE"/>
+    </logger>
+
     <root level="info" additivity="false">
         <appender-ref ref="STDOUT"/>
-        <appender-ref ref="FILE"/>
     </root>
 </configuration>

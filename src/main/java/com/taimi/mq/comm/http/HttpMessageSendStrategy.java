@@ -29,8 +29,8 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
     private static final String MESSAGE_TOKEN = "token";
     private static final String MESSAGE_METHOD = "method";
 
-    private static final String HTTP_METHOD_POST = "post";
-    private static final String HTTP_METHOD_GET = "get";
+    private static final String HTTP_METHOD_POST = "POST";
+    private static final String HTTP_METHOD_GET = "GET";
 
     private ObjectMapper mapper = new ObjectMapper();
     private HttpSender httpSender;
@@ -51,6 +51,7 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
                     String body = EntityUtils.toString(httpResponse.getEntity());
                     int code = httpResponse.getStatusLine().getStatusCode();
                     if(code == HttpStatus.SC_OK) {
+                        logger.info("Send successfully: " + message.getId());
                         Map<String, Object> map = mapper.readValue(body, new TypeReference<HashMap<String, Object>>(){});
                         if (map.containsKey(MESSAGE_ID)) {
                             String messageId = (String) map.get(MESSAGE_ID);
@@ -61,6 +62,7 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
                         }
                         return HttpSender.ErrorCode.Success;
                     }else{
+                        logger.info(String.format("Send message: %s, with error: %d", message.getId(), code));
                         if(code == HttpStatus.SC_INTERNAL_SERVER_ERROR){
                             return HttpSender.ErrorCode.HttpInternalError;
                         }
@@ -72,9 +74,11 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
                 }
             };
             if(method.equals(HTTP_METHOD_POST)){
+                logger.info("Sending message: " + payload.get(MESSAGE_URL) + ", method: " + payload.get(MESSAGE_METHOD));
                 httpSender.postJson(payload.get(MESSAGE_URL), payload.get(MESSAGE_PAYLOAD), responseHandler, payload.get(MESSAGE_TOKEN));
             }
             else if(method.equals(HTTP_METHOD_GET)){
+                logger.info("Sending message: " + payload.get(MESSAGE_URL) + ", method: " + payload.get(MESSAGE_METHOD));
                 httpSender.get(payload.get(MESSAGE_URL), payload.get(MESSAGE_TOKEN));
             }
         }catch (IllegalArgumentException e){
