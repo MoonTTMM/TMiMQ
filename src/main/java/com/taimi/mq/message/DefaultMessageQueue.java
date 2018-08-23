@@ -43,7 +43,6 @@ public class DefaultMessageQueue implements MessageQueue {
     public void dequeue(String consumer, MessageCallback callback) {
         Message message = persistStrategy.dequeueMessage(queueName, consumer);
         if(message == null){
-            logger.info("Got no message in " + queueName);
             return;
         }
         callback.handle(message);
