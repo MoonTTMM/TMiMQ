@@ -79,7 +79,7 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
             }
             else if(method.equals(HTTP_METHOD_GET)){
                 logger.info("Sending message: " + payload.get(MESSAGE_URL) + ", method: " + payload.get(MESSAGE_METHOD));
-                httpSender.get(payload.get(MESSAGE_URL), payload.get(MESSAGE_TOKEN));
+                httpSender.get(payload.get(MESSAGE_URL), responseHandler, payload.get(MESSAGE_TOKEN));
             }
         }catch (IllegalArgumentException e){
 
