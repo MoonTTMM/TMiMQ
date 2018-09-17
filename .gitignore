@@ -7,3 +7,4 @@ tomcat/
 logFile.log
 pom.xml.releaseBackup
 release.properties
+pom.xml.versionsBackup

@@ -52,13 +52,19 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
                     int code = httpResponse.getStatusLine().getStatusCode();
                     if(code == HttpStatus.SC_OK) {
                         logger.info("Send successfully: " + message.getId());
-                        Map<String, Object> map = mapper.readValue(body, new TypeReference<HashMap<String, Object>>(){});
-                        if (map.containsKey(MESSAGE_ID)) {
-                            String messageId = (String) map.get(MESSAGE_ID);
-                            callback.handle(messageId);
-                        } else {
+                        if(body == null || body.isEmpty()){
                             String messageId = message.getId();
                             callback.handle(messageId);
+                        }
+                        else {
+                            Map<String, Object> map = mapper.readValue(body, new TypeReference<HashMap<String, Object>>() {});
+                            if (map.containsKey(MESSAGE_ID)) {
+                                String messageId = (String) map.get(MESSAGE_ID);
+                                callback.handle(messageId);
+                            } else {
+                                String messageId = message.getId();
+                                callback.handle(messageId);
+                            }
                         }
                         return HttpSender.ErrorCode.Success;
                     }else{
