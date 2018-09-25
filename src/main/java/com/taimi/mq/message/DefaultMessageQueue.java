@@ -62,4 +62,9 @@ public class DefaultMessageQueue implements MessageQueue {
     public void markMessageConsuming(String messageId){
         persistStrategy.markMessageConsuming(queueName, messageId);
     }
+
+    @Override
+    public void markMessageError(String consumer, String messageId, ErrorCode errorCode) {
+        persistStrategy.markMessageError(queueName, consumer, messageId, errorCode);
+    }
 }

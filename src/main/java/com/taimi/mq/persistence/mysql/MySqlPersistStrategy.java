@@ -1,5 +1,6 @@
 package com.taimi.mq.persistence.mysql;
 
+import com.taimi.mq.message.ErrorCode;
 import com.taimi.mq.message.Message;
 import com.taimi.mq.persistence.PersistStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,10 +49,23 @@ public class MySqlPersistStrategy implements PersistStrategy {
         MessageEntity messageEntity = messageRepository.findOne(messageId);
         messageEntity.setConsumed(true);
         messageEntity.setConsuming(false);
+        messageEntity.setErrorCode(ErrorCode.Success);
         messageRepository.save(messageEntity);
     }
 
     @Override
     public void markMessageConsuming(String queueName, String messageId) {
+    }
+
+    @Override
+    public void markMessageError(String queueName, String consumer, String messageId, ErrorCode errorCode) {
+        MessageEntity messageEntity = messageRepository.findOne(messageId);
+        messageEntity.setErrorCode(errorCode);
+        // If the message cause internal error, take it as consumed, so there is way to go on.
+        if(ErrorCode.InternalError.equals(errorCode)){
+            messageEntity.setConsumed(true);
+            messageEntity.setConsuming(false);
+        }
+        messageRepository.save(messageEntity);
     }
 }

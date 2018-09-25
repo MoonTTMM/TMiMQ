@@ -14,6 +14,7 @@ public class MessageConverter {
         message.setPayload(messageEntity.getPayload());
         message.setRetryCount(messageEntity.getRetryCount());
         message.setTimeToLiveSeconds(messageEntity.getTimeToLiveSeconds());
+        message.setErrorCode(messageEntity.getErrorCode());
         return message;
     }
 }

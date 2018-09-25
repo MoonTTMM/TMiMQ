@@ -1,7 +1,7 @@
 package com.taimi.mq.persistence.mysql;
 
+import com.taimi.mq.message.ErrorCode;
 import com.taimi.mq.message.Message;
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -23,7 +23,10 @@ public class MessageEntity {
     @Convert(converter = PayloadJsonConverter.class)
     private HashMap<String, String> payload;
 
-    @CreationTimestamp
+    /**
+     * Milli-seconds precision.
+     */
+    @Column(name = "createdTime", columnDefinition = "DATETIME(3) NOT NULL")
     private Date createTime;
 
     private String consumerName;
@@ -32,6 +35,8 @@ public class MessageEntity {
     private Boolean consumed = false;
     protected String queueName;
     private Boolean consuming;
+    @Enumerated(EnumType.STRING)
+    private ErrorCode errorCode;
 
     public MessageEntity(){}
 
@@ -108,5 +113,13 @@ public class MessageEntity {
 
     public void setConsuming(Boolean consuming) {
         this.consuming = consuming;
+    }
+
+    public ErrorCode getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 }

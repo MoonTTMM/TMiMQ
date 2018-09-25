@@ -55,6 +55,9 @@ public class DefaultMessageConsumer implements MessageConsumer {
             messageSendStrategy.sendMessage(message, messageId ->{
                     logger.info("Sending message: " + messageId);
                     messageQueue.markMessageConsumed(consumerName, messageId);
+                }, (messageId, errorInfo) -> {
+                    logger.info("Sending failed: " + messageId);
+                    messageQueue.markMessageError(consumerName, messageId, errorInfo);
             });
         });
     }

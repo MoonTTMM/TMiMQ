@@ -21,5 +21,7 @@ public interface MessageQueue {
 
     void markMessageConsuming(String messageId);
 
+    void markMessageError(String consumer, String messageId, ErrorCode errorCode);
+
     void setPersistStrategy(PersistStrategy persistStrategy);
 }

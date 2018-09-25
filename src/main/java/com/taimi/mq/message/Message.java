@@ -15,6 +15,10 @@ public class Message implements Serializable {
     protected Boolean consumed = false;
     protected String queueName;
     protected Boolean consuming = false;
+    /**
+     * Produce and consume process, some error may occur.
+     */
+    protected ErrorCode errorCode;
 
     public Message(){}
 
@@ -76,5 +80,11 @@ public class Message implements Serializable {
 
     public void setConsuming(Boolean consuming) {
         this.consuming = consuming;
+    }
+
+    public ErrorCode getErrorCode() { return errorCode; }
+
+    public void setErrorCode(ErrorCode errorCode) {
+        this.errorCode = errorCode;
     }
 }
