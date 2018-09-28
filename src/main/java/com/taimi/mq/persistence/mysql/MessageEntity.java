@@ -47,6 +47,7 @@ public class MessageEntity {
         this.timeToLiveSeconds = message.getTimeToLiveSeconds();
         this.queueName = message.getQueueName();
         this.consuming = message.getConsuming();
+        this.createTime = new Date();
     }
 
     public Date getCreateTime() {
