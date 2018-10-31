@@ -6,6 +6,8 @@ import com.taimi.mq.persistence.PersistStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Created by superttmm on 25/07/2018.
  */
@@ -46,11 +48,14 @@ public class MySqlPersistStrategy implements PersistStrategy {
 
     @Override
     public void consumeMessage(String queueName, String consumer, String messageId) {
-        MessageEntity messageEntity = messageRepository.findOne(messageId);
-        messageEntity.setConsumed(true);
-        messageEntity.setConsuming(false);
-        messageEntity.setErrorCode(ErrorCode.Success);
-        messageRepository.save(messageEntity);
+        Optional<MessageEntity> messageEntityOptional = messageRepository.findById(messageId);
+        if(messageEntityOptional.isPresent()) {
+            MessageEntity messageEntity = messageEntityOptional.get();
+            messageEntity.setConsumed(true);
+            messageEntity.setConsuming(false);
+            messageEntity.setErrorCode(ErrorCode.Success);
+            messageRepository.save(messageEntity);
+        }
     }
 
     @Override
@@ -59,13 +64,16 @@ public class MySqlPersistStrategy implements PersistStrategy {
 
     @Override
     public void markMessageError(String queueName, String consumer, String messageId, ErrorCode errorCode) {
-        MessageEntity messageEntity = messageRepository.findOne(messageId);
-        messageEntity.setErrorCode(errorCode);
-        // If the message cause internal error, take it as consumed, so there is way to go on.
-        if(ErrorCode.InternalError.equals(errorCode)){
-            messageEntity.setConsumed(true);
-            messageEntity.setConsuming(false);
+        Optional<MessageEntity> messageEntityOptional = messageRepository.findById(messageId);
+        if(messageEntityOptional.isPresent()) {
+            MessageEntity messageEntity = messageEntityOptional.get();
+            messageEntity.setErrorCode(errorCode);
+            // If the message cause internal error, take it as consumed, so there is way to go on.
+            if (ErrorCode.InternalError.equals(errorCode)) {
+                messageEntity.setConsumed(true);
+                messageEntity.setConsuming(false);
+            }
+            messageRepository.save(messageEntity);
         }
-        messageRepository.save(messageEntity);
     }
 }

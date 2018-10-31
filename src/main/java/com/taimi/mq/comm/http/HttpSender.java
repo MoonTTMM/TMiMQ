@@ -8,6 +8,7 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -123,7 +124,10 @@ public class HttpSender {
             }else{
                 return httpClient.execute(httpPost, handler);
             }
-        } catch (IOException e) {
+        }catch (HttpHostConnectException e){
+            return ErrorCode.HostDownException;
+        }
+        catch (IOException e) {
             e.printStackTrace();
             return ErrorCode.HttpFailException;
         }
@@ -132,6 +136,7 @@ public class HttpSender {
     enum ErrorCode{
         Success,
         HttpFailException,
+        HostDownException,
         HttpEncodingPayloadException,
         HttpInternalError
     }
