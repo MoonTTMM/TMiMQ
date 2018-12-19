@@ -2,10 +2,10 @@ package com.taimi.mq.comm.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.taimi.mq.message.ErrorCode;
 import com.taimi.mq.comm.MessageSendStrategy;
 import com.taimi.mq.comm.MessageSentCallback;
 import com.taimi.mq.comm.MessageSentErrorCallback;
+import com.taimi.mq.message.ErrorCode;
 import com.taimi.mq.message.Message;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ResponseHandler;
@@ -72,6 +72,8 @@ public class HttpMessageSendStrategy implements MessageSendStrategy {
                     }else{
                         logger.info(String.format("Send message: %s, with error: %d", message.getId(), code));
                         if(code == HttpStatus.SC_INTERNAL_SERVER_ERROR){
+                            // log the error body.
+                            logger.error(body);
                             if(errorCallback != null){
                                 errorCallback.handle(message.getId(), ErrorCode.InternalError);
                             }
