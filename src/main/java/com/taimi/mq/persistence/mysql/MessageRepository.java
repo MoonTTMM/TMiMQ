@@ -2,6 +2,7 @@ package com.taimi.mq.persistence.mysql;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +17,6 @@ public interface MessageRepository extends CrudRepository<MessageEntity, String>
     MessageEntity findFirstByQueueNameOrderByCreateTimeAsc(String queueName);
 
     MessageEntity findFirstByQueueNameAndConsumedOrderByCreateTimeAsc(String queueName, Boolean consumed);
+
+    List<MessageEntity> findByCreateTimeBefore(Date date);
 }

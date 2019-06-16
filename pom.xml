@@ -10,7 +10,7 @@
 
     <groupId>com.tmirob</groupId>
     <artifactId>TMiMQ</artifactId>
-    <version>1.0.7-SNAPSHOT</version>
+    <version>1.0.7</version>
 
     <distributionManagement>
         <snapshotRepository>

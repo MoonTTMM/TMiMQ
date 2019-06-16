@@ -6,6 +6,8 @@ import com.taimi.mq.persistence.PersistStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -75,5 +77,11 @@ public class MySqlPersistStrategy implements PersistStrategy {
             }
             messageRepository.save(messageEntity);
         }
+    }
+
+    @Override
+    public void clearMessage(Date createTime){
+        List<MessageEntity> messageEntities = messageRepository.findByCreateTimeBefore(createTime);
+        messageRepository.deleteAll(messageEntities);
     }
 }

@@ -3,6 +3,8 @@ package com.taimi.mq.persistence;
 import com.taimi.mq.message.ErrorCode;
 import com.taimi.mq.message.Message;
 
+import java.util.Date;
+
 /**
  * Created by superttmm on 25/07/2018.
  */
@@ -27,4 +29,10 @@ public interface PersistStrategy {
     void markMessageConsuming(String queueName, String messageId);
 
     void markMessageError(String queueName, String consumer, String messageId, ErrorCode errorCode);
+
+    /**
+     * clear message before given time.
+     * @param createTime
+     */
+    void clearMessage(Date createTime);
 }

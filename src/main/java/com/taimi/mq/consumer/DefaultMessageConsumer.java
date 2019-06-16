@@ -53,10 +53,10 @@ public class DefaultMessageConsumer implements MessageConsumer {
         messageQueue.dequeue(consumerName, message -> {
             logger.info("Consuming message: " + message.getId());
             messageSendStrategy.sendMessage(message, messageId ->{
-                    logger.info("Sending message: " + messageId);
+                    logger.info("Sending successfully handler: " + messageId);
                     messageQueue.markMessageConsumed(consumerName, messageId);
                 }, (messageId, errorInfo) -> {
-                    logger.info("Sending failed: " + messageId);
+                    logger.info("Sending failed handler: " + messageId);
                     messageQueue.markMessageError(consumerName, messageId, errorInfo);
             });
         });
