@@ -21,7 +21,7 @@ import java.util.List;
 
 public class HttpSender {
 
-    private final int timeout = 8;
+    private final int timeout = 12;
     private CloseableHttpClient httpClient;
 
     private ResponseHandler<ErrorCode> defaultResponseHandler = httpResponse -> {

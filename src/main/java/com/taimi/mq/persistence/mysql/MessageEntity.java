@@ -12,6 +12,9 @@ import java.util.HashMap;
  * Created by superttmm on 26/07/2018.
  */
 @Entity
+@Table(name="message_entity",indexes = {
+        @Index(name="queueNameIndex", columnList = "QueueName")
+})
 public class MessageEntity {
 
     @Id
